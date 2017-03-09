@@ -2,9 +2,10 @@
 
 In addition to the requirements from the Getting Started guide:
 
-NPM 3.x
-Visual Studio 2015 Community
-Windows 10 SDK Build 10586
+- NPM 3.x
+- Visual Studio 2015 Community
+- Windows 10 SDK Build 10586
+
 If this is your first time using UWP, you may be able to install the SDK by opening the solution file in the ReactWindows folder in Visual Studio. After opening the solution, right click the Solution in the Solution Explorer and select the option labeled "Install Missing Components". You may have to shutdown Visual Studio to continue the installation.
 
 # Install
@@ -26,7 +27,7 @@ command in the project directory.
 Run project
 ``` react-native run-windows```
 
-#Noted
+#Note
 
 for using "react-native-vector-icons" package
 
