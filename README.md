@@ -23,6 +23,8 @@ Initialize Windows project with
 ```react-native windows```
 command in the project directory.
 
+```Note : Overwrite index.windows.js please type "n"```
+
 Run project
 ``` react-native run-windows```
 
