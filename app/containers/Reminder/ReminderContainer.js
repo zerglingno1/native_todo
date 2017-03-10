@@ -31,6 +31,7 @@ export default class ReminderContainer extends Component{
     super(props);
     this.state = {
       listData: this.props.listData,
+      chars: ''
     }
   }
 
@@ -60,6 +61,39 @@ export default class ReminderContainer extends Component{
     
     LayoutAnimation.easeInEaseOut();
   }
+  
+  _wordChange(text) {
+    let { chars } = this.state;
+    if (text.length == 1) {
+      // The scanner is likely to input characters much quicker than a user can (sensibly) with a keyboard
+      setTimeout(() => {
+        const { chars, listData } = this.state;
+        // check we have a long length e.g. it is a barcode
+        if (chars.length >= 9) {
+          listData.list.push({
+            selected: false,
+            text: chars
+          })
+          //remove add textbox
+          this.refs.addList.setNativeProps({text: ''});
+          this.setState({
+            listData,
+            chars: '',
+          });
+
+          LayoutAnimation.easeInEaseOut();
+        } else {
+          this.setState({
+            chars: '',
+          });
+        }
+      }, 800);
+    }
+    
+    this.setState({
+      chars: text
+    });
+  }
 
   render() {
     const { listData } = this.state;
@@ -71,12 +105,12 @@ export default class ReminderContainer extends Component{
         count++;
       }
       return (
-        <View ref={'list' + index} key={index} style={[styles.reminderList,{opacity: item.selected ? 0.5 : 1}]}>
+        <View ref={'list' + index} key={index} style={[styles.reminderList, {opacity: item.selected ? 0.5 : 1}]}>
           <TouchableHighlight 
-          underlayColor='transparent' 
-          style={[styles.check, {borderColor: item.selected?listData.theme: '#c6c6c6'}]} 
-          onPress = {() => this._done(index)}>
-            <View style={item.selected ? [styles.fill,{backgroundColor: listData.theme}]: null}></View>
+            underlayColor='transparent' 
+            style={[styles.check, {borderColor: item.selected ? listData.theme: '#c6c6c6'}]} 
+            onPress = {() => this._done(index)}>
+            <View style={item.selected ? [styles.fill, {backgroundColor: listData.theme}]: null}></View>
           </TouchableHighlight>
           <View style={styles.input}>
             { !item.selected ? 
@@ -96,8 +130,10 @@ export default class ReminderContainer extends Component{
         <View style={styles.input}>
           <TextInput 
           autoCapitalize='none' 
-          ref='addList' 
+          ref='addList'
+          placeholder='type your todo'
           onEndEditing={(event) => this._addList(event.nativeEvent.text)} 
+          onChangeText={(text) => this._wordChange(text) }
           style={styles.inputText}/>
         </View>
       </View>
@@ -108,8 +144,8 @@ export default class ReminderContainer extends Component{
         <View style={styles.reminderContent}>
           <TouchableHighlight underlayColor='transparent' onPress={this.props.switch}>
             <View style={styles.reminderTitleContainer}>
-              <Text style={[styles.reminderTitle,{color: listData.theme}]}>{listData.title}</Text>
-              <Text style={[styles.reminderTitle,{color: listData.theme}]}>
+              <Text style={[styles.reminderTitle, {color: listData.theme}]}>{listData.title}</Text>
+              <Text style={[styles.reminderTitle, {color: listData.theme}]}>
                 <Icon name='ios-archive' style={styles.addIcon} color='#c6c6c6' size={35}/>
                 {count}
               </Text>
