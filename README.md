@@ -28,6 +28,18 @@ command in the project directory.
 Run project
 ``` react-native run-windows```
 
+# Install for android
+
+install some package
+```npm install```
+
+Initialize Android project with 
+```react-native upgrade```
+command in the project directory.
+
+Run project
+``` react-native run-android```
+
 #Note
 
 for using "react-native-vector-icons" package 
