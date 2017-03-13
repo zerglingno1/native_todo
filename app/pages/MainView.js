@@ -11,6 +11,8 @@ import Util from '../utils/utils';
 import Icon from 'react-native-vector-icons/Ionicons';
 import StopWatch from './StopWatch';
 import Reminder from './Reminder';
+import TestAsyncStorePerProduct from './TestAsyncStorePerProduct';
+import TestAsyncStoreAllProduct from './TestAsyncStoreAllProduct';
 
 export default class MainView extends Component {
   constructor(props) {
@@ -29,6 +31,22 @@ export default class MainView extends Component {
         title: 'REMINDER',
         component: Reminder,
         icon: 'ios-alarm-outline',
+        size: 100,
+        color: '#ff856c',
+        hideNav: false,
+      },  {
+        key: 2,
+        title: 'TEST ASYNCSTORAGE PER PRODUCT',
+        component: TestAsyncStorePerProduct,
+        icon: 'ios-construct-outline',
+        size: 100,
+        color: '#ff856c',
+        hideNav: false,
+      },  {
+        key: 3,
+        title: 'TEST ASYNCSTORAGE ALL PRODUCT',
+        component: TestAsyncStoreAllProduct,
+        icon: 'ios-settings-outline',
         size: 100,
         color: '#ff856c',
         hideNav: false,

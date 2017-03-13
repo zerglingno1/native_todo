@@ -51,12 +51,12 @@ export default class WatchControl extends Component{
 
   _addRecord() {
     if (this.state.watchOn) {
-      this.props.addRecord()
+      this.props.addRecord();
     } else {
       this.props.clearRecord()
       this.setState({
         stopBtnText: 'START'
-      })
+      });
     }
   }
 

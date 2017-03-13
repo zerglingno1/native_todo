@@ -10,15 +10,15 @@ import WatchControl from '../containers/StopWatch/WatchControl';
 export default class extends Component{
   constructor() {
     super();
-      this.state = {
-        stopWatch: false,
-        totalTime: '00:00.00',
-        sectionTime: '00:00.00',
-        recordCounter: 0,
-        interval: null,
-        record:[
-          {title: '',time: ''},
-        ],
+    this.state = {
+      stopWatch: false,
+      totalTime: '00:00.00',
+      sectionTime: '00:00.00',
+      recordCounter: 0,
+      interval: null,
+      record:[
+        {title: '',time: ''},
+      ],
     };
 
     Date.prototype.fullDate = function() {
