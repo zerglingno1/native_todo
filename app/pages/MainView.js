@@ -13,6 +13,7 @@ import StopWatch from './StopWatch';
 import Reminder from './Reminder';
 import TestAsyncStorePerProduct from './TestAsyncStorePerProduct';
 import TestAsyncStoreAllProduct from './TestAsyncStoreAllProduct';
+import TestSqliteNative from './TestSqliteNative';
 
 export default class MainView extends Component {
   constructor(props) {
@@ -50,11 +51,19 @@ export default class MainView extends Component {
         size: 100,
         color: '#ff856c',
         hideNav: false,
+      }, {
+        key: 4,
+        title: 'TEST SQLITE NATIVE',
+        component: TestSqliteNative,
+        icon: 'ios-archive-outline',
+        size: 100,
+        color: '#ff856c',
+        hideNav: false,
       }],
     }
   }
 
-  _goToPage(index){
+  _goToPage(index) {
     const { menus } = this.state;
     const { navigator } = this.props;
 
@@ -69,7 +78,6 @@ export default class MainView extends Component {
   render() {
     const { menus } = this.state;
     const { title } = this.props;
-
     let boxs = menus.map((item, index) => {
       return(
         <TouchableHighlight key={item.key} style={[styles.touchBox, styles.touchBox1]} onPress={()=> this._goToPage(index)}>
@@ -95,8 +103,8 @@ const styles = StyleSheet.create({
     marginTop: 60
   },
   touchBox: {
-    width: Util.size.width/3-0.33334,
-    height: Util.size.width/3,
+    width: Util.size.width/3.01333,
+    height: Util.size.width/3.01333,
     backgroundColor: '#f3f3f3',
   },
   touchBox1: {
@@ -108,8 +116,8 @@ const styles = StyleSheet.create({
   boxContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: Util.size.width/3,
-    height: Util.size.width/3,
+    width: Util.size.width/3.01333,
+    height: Util.size.width/3.01333,
   },
   boxText: {
     position: 'absolute',
