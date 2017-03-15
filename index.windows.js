@@ -36,15 +36,12 @@ class NavigationBar extends Navigator.NavigationBar {
 class todo_native extends Component {
 
   configureScene(route, routeStack) {
-    if (route.type == 'Bottom') {
-      return Navigator.SceneConfigs.FloatFromBottom; 
-    }
-    return Navigator.SceneConfigs.PushFromRight;
+    return Navigator.SceneConfigs.FadeAndroid;
   }
 
   routeMapper = {
     LeftButton: (route, navigator, index, navState) =>
-      { 
+      {
         if(route.index > 0) {
           return <TouchableOpacity
             underlayColor='transparent'

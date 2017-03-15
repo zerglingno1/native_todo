@@ -6,7 +6,8 @@ import {
   Text,
   View,
   Button,
-  NativeModules } from 'react-native';
+  NativeModules,
+  TextInput } from 'react-native';
 import Util from '../utils/utils';
 import TestRecord from '../components/Test/TestRecord';
 import axios from 'axios';
@@ -23,7 +24,7 @@ export default class TestSqliteNative extends Component{
       viewTime: null,
       interval: null,
       startTime: 0,
-      limit: 100000,
+      limit: '100000',
       url: 'http://192.168.1.58/api/pos_2.php'
     };
   }
@@ -140,11 +141,38 @@ export default class TestSqliteNative extends Component{
     }
   }
 
+  handleUrlChange = (event) => {
+    let url = event.nativeEvent.text;
+    this.setState({
+        url
+      });
+  };
+
+  handleLimitChange = (event) => {
+    let limit = event.nativeEvent.text;
+    this.setState({
+        limit
+      });
+  };
+
   render() {
-    const { apiTime, insertTime, viewTime, isLoad, listProducts, limit } = this.state;
+    const { apiTime, insertTime, viewTime, isLoad, listProducts, limit, url } = this.state;
     return(
       <View style={styles.Container}>
         <Text>LIMIT {limit}</Text>
+        <TextInput
+            autoCapitalize="none"
+            defaultValue={limit}
+            onChange={this.handleLimitChange}
+            clearButtonMode="while-editing"
+          />
+        <Text>URL API {url}</Text>
+        <TextInput
+            autoCapitalize="none"
+            defaultValue={url}
+            onChange={this.handleUrlChange}
+            clearButtonMode="while-editing"
+          />
         {apiTime && (<Text> API LOAD : {apiTime} </Text>)}
         {insertTime && (<Text> INSERT TO STORAGE : {insertTime} </Text>)}
         {viewTime && (<Text> GET FROM STORAGE : {viewTime} </Text>)}

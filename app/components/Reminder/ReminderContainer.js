@@ -134,6 +134,7 @@ export default class ReminderContainer extends Component{
           placeholder='type your todo'
           onEndEditing={(event) => this._addList(event.nativeEvent.text)} 
           onChangeText={(text) => this._wordChange(text) }
+          onSubmitEditing={(event) => this._addList(event.nativeEvent.text)}
           style={styles.inputText}/>
         </View>
       </View>

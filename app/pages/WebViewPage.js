@@ -7,12 +7,13 @@ import {
   TouchableOpacity,
   View,
   WebView } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class WebViewPage extends Component {
   constructor() {
     super();
     this.state = {
-      url: '',
+      url: 'http://www.google.com',
       status: 'No Page Loaded',
       backButtonEnabled: false,
       forwardButtonEnabled: false,
@@ -20,6 +21,7 @@ export default class WebViewPage extends Component {
       scalesPageToFit: true,
     };
   }
+  
   inputText = '';
   webview = null;
 
@@ -42,14 +44,14 @@ export default class WebViewPage extends Component {
             onPress={this.goBack}
             style={this.state.backButtonEnabled ? styles.navButton : styles.disabledButton}>
             <Text>
-               {'<'}
+               <Icon size={20} name='ios-arrow-back-outline'></Icon>
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={this.goForward}
             style={this.state.forwardButtonEnabled ? styles.navButton : styles.disabledButton}>
             <Text>
-              {'>'}
+              <Icon size={20} name='ios-arrow-forward-outline'></Icon>
             </Text>
           </TouchableOpacity>
           <TextInput
@@ -64,7 +66,7 @@ export default class WebViewPage extends Component {
           <TouchableOpacity onPress={this.pressGoButton}>
             <View style={styles.goButton}>
               <Text>
-                 Go!
+                 <Icon size={20} name='md-arrow-round-forward'></Icon>
               </Text>
             </View>
           </TouchableOpacity>
@@ -100,7 +102,10 @@ export default class WebViewPage extends Component {
 
   goForward = () => {
     //this.refs['webview'].goForward();
-    this.webview.postMessage('"Hello" from React Native!');
+    const script = 'document.write("Injected JS ")';  // eslint-disable-line quotes
+    if (this.webview) {
+      this.webview.injectJavaScript(script);
+    }
   };
 
   reload = () => {
@@ -182,7 +187,9 @@ const HTML = `
     </style>
   </head>
   <body>
-    <h1>Hello Static World</h1>
+    <h1 id="demo">Hello Static World</h1>
+    <button id="mybutton" onclick="window.postMessage('hello');">CLICK ME</button>
+    
   </body>
 </html>
 `;
@@ -217,6 +224,7 @@ var styles = StyleSheet.create({
   navButton: {
     width: 20,
     padding: 3,
+    height: 32,
     marginRight: 3,
     alignItems: 'center',
     justifyContent: 'center',
@@ -226,6 +234,7 @@ var styles = StyleSheet.create({
   },
   disabledButton: {
     width: 20,
+    height: 32,
     padding: 3,
     marginRight: 3,
     alignItems: 'center',
@@ -235,14 +244,16 @@ var styles = StyleSheet.create({
     borderRadius: 3,
   },
   goButton: {
-    height: 24,
+    height: 32,
+    width: 30,
     padding: 3,
     marginLeft: 8,
+    marginRight: 3,
     alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: 'rgba(255,255,255,0.8)',
     borderColor: 'transparent',
     borderRadius: 3,
-    alignSelf: 'stretch',
   },
   statusBar: {
     flexDirection: 'row',
