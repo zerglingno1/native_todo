@@ -3,9 +3,9 @@
 import React,{ Component } from 'react';
 import { Platform,ListView,StyleSheet,StatusBar,Text,TouchableHighlight,View } from 'react-native';
 import Util from '../utils/utils';
-import WatchFace from '../containers/StopWatch/WatchFace';
-import WatchRecord from '../containers/StopWatch/WatchRecord';
-import WatchControl from '../containers/StopWatch/WatchControl';
+import WatchFace from '../components/StopWatch/WatchFace';
+import WatchRecord from '../components/StopWatch/WatchRecord';
+import WatchControl from '../components/StopWatch/WatchControl';
 
 export default class extends Component{
   constructor() {

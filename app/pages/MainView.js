@@ -14,6 +14,7 @@ import Reminder from './Reminder';
 import TestAsyncStorePerProduct from './TestAsyncStorePerProduct';
 import TestAsyncStoreAllProduct from './TestAsyncStoreAllProduct';
 import TestSqliteNative from './TestSqliteNative';
+import WebViewPage from './WebViewPage';
 
 export default class MainView extends Component {
   constructor(props) {
@@ -56,6 +57,14 @@ export default class MainView extends Component {
         title: 'TEST SQLITE NATIVE',
         component: TestSqliteNative,
         icon: 'ios-archive-outline',
+        size: 100,
+        color: '#ff856c',
+        hideNav: false,
+      }, {
+        key: 5,
+        title: 'WEBVIEW',
+        component: WebViewPage,
+        icon: 'ios-globe-outline',
         size: 100,
         color: '#ff856c',
         hideNav: false,

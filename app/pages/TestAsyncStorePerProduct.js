@@ -8,7 +8,7 @@ import {
   AsyncStorage,
   Button } from 'react-native';
 import Util from '../utils/utils';
-import TestRecord from '../containers/Test/TestRecord';
+import TestRecord from '../components/Test/TestRecord';
 import axios from 'axios';
 
 export default class TestAsyncStorePerProduct extends Component{

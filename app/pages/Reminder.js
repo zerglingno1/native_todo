@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Util from '../utils/utils';
-import ReminderContainer from '../containers/Reminder/ReminderContainer';
+import ReminderContainer from '../components/Reminder/ReminderContainer';
 
 export default class extends Component{
   constructor() {
