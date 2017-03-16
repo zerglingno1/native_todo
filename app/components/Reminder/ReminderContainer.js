@@ -9,6 +9,7 @@ import {
   TextInput,
   LayoutAnimation,
   TouchableHighlight,
+  AsyncStorage,
   View } from 'react-native';
 import Util from '../../utils/utils';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -35,13 +36,39 @@ export default class ReminderContainer extends Component{
     }
   }
 
+  saveStorage(listData) {
+    AsyncStorage.setItem('@TODOS', JSON.stringify(listData), (err) => {
+      this.setState({
+        listData,
+      });
+    });
+  }
+
+  getStorage() {
+    AsyncStorage.getItem('@TODOS', (err, stores) => {
+      if(!stores) {
+        this.setState({
+          listData: {
+            title: 'Reminder',
+            theme: '#fe952b',
+            list: []
+          },
+        });
+      } else {
+        this.setState({
+          listData: JSON.parse(stores),
+        });
+      }
+    });
+  }
+
   _done(index) {
     const { listData } = this.state;
 
     listData.list[index].selected = !listData.list[index].selected;
-    this.setState({
-      listData,
-    });
+    
+    this.saveStorage(listData);
+
     LayoutAnimation.easeInEaseOut();
   }
 
@@ -52,11 +79,9 @@ export default class ReminderContainer extends Component{
       listData.list.push({
         selected: false,
         text
-      })
-      this.refs.addList.setNativeProps({text: ''});
-      this.setState({
-        listData,
       });
+      this.saveStorage(listData);
+      this.refs.addList.setNativeProps({text: ''});
     }
     
     LayoutAnimation.easeInEaseOut();
@@ -75,9 +100,9 @@ export default class ReminderContainer extends Component{
             text: chars
           })
           //remove add textbox
+          this.saveStorage(listData);
           this.refs.addList.setNativeProps({text: ''});
           this.setState({
-            listData,
             chars: '',
           });
 
@@ -93,6 +118,10 @@ export default class ReminderContainer extends Component{
     this.setState({
       chars: text
     });
+  }
+
+  componentWillMount() {
+    this.getStorage();
   }
 
   render() {
@@ -113,9 +142,7 @@ export default class ReminderContainer extends Component{
             <View style={item.selected ? [styles.fill, {backgroundColor: listData.theme}]: null}></View>
           </TouchableHighlight>
           <View style={styles.input}>
-            { !item.selected ? 
-            (<TextInput defaultValue={item.text} style={styles.inputText}/>) : 
-            (<Text style={styles.reminderText}> {item.text} </Text>) }
+            <TextInput defaultValue={item.text} style={styles.inputText} editable={ !item.selected ? true : false}/>
           </View>
         </View>
       );

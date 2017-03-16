@@ -67,7 +67,7 @@ export default class MainView extends Component {
         icon: 'ios-globe-outline',
         size: 100,
         color: '#ff856c',
-        hideNav: false,
+        hideNav: true,
       }],
     }
   }

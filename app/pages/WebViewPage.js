@@ -8,12 +8,19 @@ import {
   View,
   WebView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 
 export default class WebViewPage extends Component {
   constructor() {
     super();
     this.state = {
-      url: 'http://www.google.com',
+      index: 0,
+      routes: [
+        { key: '1', title: 'Google', url: 'http://google.com/', status: '' },
+        { key: '2', title: '+' },
+      ],
+      route: '1',
+      url: 'http://google.com/',
       status: 'No Page Loaded',
       backButtonEnabled: false,
       forwardButtonEnabled: false,
@@ -23,7 +30,7 @@ export default class WebViewPage extends Component {
   }
   
   inputText = '';
-  webview = null;
+  webview = [];
 
   handleTextInputChange = (event) => {
     let url = event.nativeEvent.text;
@@ -36,7 +43,7 @@ export default class WebViewPage extends Component {
   render() {
     this.inputText = this.state.url;
 
-    let source = (this.state.url == '') ? {html: HTML} : {uri: this.state.url};
+    let source = {uri: this.state.url};
     return (
       <View style={[styles.container]}>
         <View style={[styles.addressBarRow]}>
@@ -71,19 +78,12 @@ export default class WebViewPage extends Component {
             </View>
           </TouchableOpacity>
         </View>
-        <WebView
-          ref={webview => { this.webview = webview; }}
-          automaticallyAdjustContentInsets={false}
-          style={styles.webView}
-          source={source}
-          javaScriptEnabled={true}
-          domStorageEnabled={true}
-          decelerationRate="normal"
-          onNavigationStateChange={this.onNavigationStateChange}
-          onShouldStartLoadWithRequest={this.onShouldStartLoadWithRequest}
-          startInLoadingState={true}
-          scalesPageToFit={this.state.scalesPageToFit}
-          onMessage={this.onMessage}
+        <TabViewAnimated
+          style={styles.slideContainer}
+          navigationState={this.state}
+          renderScene={this._renderScene}
+          renderHeader={this._renderHeader}
+          onRequestChangeTab={this._handleChangeTab}
         />
         <View style={styles.statusBar}>
           <Text style={styles.statusBarText}>{this.state.status}</Text>
@@ -92,39 +92,94 @@ export default class WebViewPage extends Component {
     );
   }
 
-  onMessage = (e) => {
+  _handleChangeTab = (index) => {
+    let { routes } = this.state;
+    if(index == routes.length - 1 && routes.length < 5) {
+      let count = routes.length;
+
+      routes[index].title = 'tab';
+      routes[index].url = 'http://google.com';
+
+      routes.push({ key: String(count + 1), title: '+', url: '' });
+      this.setState({ 
+        index,
+        routes,
+        url: 'http://google.com'
+      });
+    } else {
+      this.setState({ index, url: routes[index].url, status: routes[index].status});
+    }
+  };
+
+  _renderScene = ({ route }) => {
+    return <View style={[ styles.page, { backgroundColor: '#3b5998' } ]} />;
+  };
+
+  _renderHeader = (props) => {
+    return <TabBar style={[{ backgroundColor: '#3b5998' } ]} tabWidth = {30} {...props} />;
+  };
+
+   _renderScene = ({ route, index }) => {
+    let source = {uri: route.url};
+    const { routes } = this.state;
+    if(index != routes.length - 1) {
+      return (<WebView
+      ref={webview => { 
+          this.webview.push(webview);
+        }}
+      automaticallyAdjustContentInsets={false}
+      style={styles.webView}
+      source={source}
+      javaScriptEnabled={true}
+      domStorageEnabled={true}
+      decelerationRate="normal"
+      onNavigationStateChange={this._onNavigationStateChange}
+      onShouldStartLoadWithRequest={this._onShouldStartLoadWithRequest}
+      startInLoadingState={true}
+      scalesPageToFit={this.state.scalesPageToFit}
+      onMessage={this._onMessage}
+    />);
+    }
+    
+  };
+
+  _onMessage = (e) => {
     console.warn(e);
   };
 
   goBack = () => {
-    this.webview.goBack();
+    const { index } = this.state;
+    this.webview[index].goBack();
   };
 
   goForward = () => {
-    //this.refs['webview'].goForward();
-    const script = 'document.write("Injected JS ")';  // eslint-disable-line quotes
-    if (this.webview) {
-      this.webview.injectJavaScript(script);
-    }
+    const { index } = this.state;
+    this.webview[index].goForward();
   };
 
   reload = () => {
-    this.webview.reload();
+    const { index } = this.state;
+    this.webview[index].reload();
   };
 
-  onShouldStartLoadWithRequest = (event) => {
+  _onShouldStartLoadWithRequest = (event) => {
     // Implement any custom loading logic here, don't forget to return!
     return true;
   };
 
-  onNavigationStateChange = (navState) => {
+  _onNavigationStateChange = (navState) => {
+    let { routes, index } = this.state;
+    routes[index].status = navState.title;
+    routes[index].title = (navState.title != '') ? navState.title : navState.url;
+    routes[index].url = navState.url;
     this.setState({
       backButtonEnabled: navState.canGoBack,
       forwardButtonEnabled: navState.canGoForward,
       url: navState.url,
       status: navState.title,
       loading: navState.loading,
-      scalesPageToFit: true
+      scalesPageToFit: true,
+      routes
     });
   };
 
@@ -133,12 +188,15 @@ export default class WebViewPage extends Component {
   };
 
   pressGoButton = () => {
-    var url = this.inputText.toLowerCase();
-    if (url === this.state.url) {
+    let url = this.inputText.toLowerCase();
+    const { routes, index } = this.state;
+    if (url === routes[index].url) {
       this.reload();
     } else {
+      routes[index].url = url;
       this.setState({
-        url: url,
+        routes,
+        url
       });
     }
     // dismiss keyboard
@@ -164,42 +222,20 @@ class Button extends React.Component {
   }
 }
 
-const HTML = `
-<!DOCTYPE html>\n
-<html>
-  <head>
-    <title>Hello Static World</title>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=320, user-scalable=no">
-    <style type="text/css">
-      body {
-        margin: 0;
-        padding: 0;
-        font: 62.5% arial, sans-serif;
-        background: #ccc;
-      }
-      h1 {
-        padding: 45px;
-        margin: 0;
-        text-align: center;
-        color: #33f;
-      }
-    </style>
-  </head>
-  <body>
-    <h1 id="demo">Hello Static World</h1>
-    <button id="mybutton" onclick="window.postMessage('hello');">CLICK ME</button>
-    
-  </body>
-</html>
-`;
-
-
 var styles = StyleSheet.create({
+  slideContainer: {
+    flex: 1,
+  },
+  page: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: '#3b5998',
-    marginTop: 65,
+    //marginTop: 65,
+    marginTop: 0,
   },
   addressBarRow: {
     flexDirection: 'row',
